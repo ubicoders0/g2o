@@ -1,5 +1,169 @@
 # g2o - General Graph Optimization
 
+## Ubicoders g2opy edition
+
+This project is based on the original g2o maintainer as below.
+
+This porject provide windows and linux off the shelf packge including .dll and .so files as well as the types of the apis for intellisense.
+
+Otherthan that, same as g2o's pymem branch
+
+Latest Commit base:
+- 70f058fde4516505ecb3b392b25bd66b2f4fdf47 (Sep 21, 2025)
+
+### How it works
+Built the .whl with damn .dll and .so files for god xxxx sake.
+
+### Supported Python Versions
+
+- 3.10 ⬜ 
+- 3.11 ⬜
+- 3.12 ✅
+
+### Supproted Numpy Version
+
+- numpy 1 ⬜ 
+- numpy 2 ✅
+
+### Tested OS and Python
+
+- Windows 11 ✅
+- Ubuntu 20  ⬜
+- Ubuntu 22  ⬜
+- Ubuntu 24  ✅
+- Ubuntu 25  ✅
+
+### ubuntu dependencies
+```bash
+sudo apt-get install -qq qtdeclarative5-dev qt5-qmake libqglviewer-dev-qt5 libsuitesparse-dev libeigen3-dev -y
+pip install "numpy>=2.0"
+```
+
+For the new conda env
+```bash
+conda install -y -c conda-forge "libstdcxx-ng>=12" "libgcc-ng>=12" libgomp
+```
+
+### Test the installaton
+
+```python
+import numpy as np
+import g2opy as g2o
+np.set_printoptions(precision=3)
+np.set_printoptions(suppress=True)
+from collections import defaultdict
+
+def showCameraPoses(optim, idx, N):
+    for i in range(idx, idx + N):
+        T = optim.vertex(i).estimate().matrix()
+        trans = T[:3, 3]
+        print('camera pose at ', i, ': ', trans)
+
+def calcSSE(optim, idx, wPts):
+    sse = 0
+    N = wPts.shape[0]
+    for i in range(idx, idx + N):
+        guessedWpt = optim.vertex(i)
+        error = guessedWpt.estimate() - wPts[i-idx]
+        sse += np.sum(error ** 2)
+    return sse
+
+def showWpts(optim, idx, N):
+    for i in range(idx, idx + N):
+        T = optim.vertex(i).estimate()
+        #T = np.round(T, 0)
+        print('guessed wPt at ', i-idx, ': ', T)
+
+def main():   
+    optimizer = g2o.SparseOptimizer()
+    solver = g2o.BlockSolverSE3(g2o.LinearSolverCSparseSE3())
+    solver = g2o.OptimizationAlgorithmLevenberg(solver)
+    optimizer.set_algorithm(solver)
+
+    f, p = 200, 256
+    baseline = 0.3
+    K = np.array([[f, 0, p],
+                  [0, f, p],
+                  [0, 0, 1]])
+
+    wPts = np.array([
+        [0, 0, 10],
+        [-1, 3, 30],
+        [2, 2, 37.2],
+    ])
+
+    num_pose = 10
+    for i in range(0, int(num_pose/2)):
+        pose = g2o.Isometry3d(np.identity(3), [(i-2)*10, 0, 0])
+        v_se3 = g2o.VertexSCam()
+        v_se3.set_cam(f, f, p, p, baseline)
+        v_se3.set_id(i)
+        v_se3.set_estimate(pose)
+        if i < 2:
+            v_se3.set_fixed(True)
+        v_se3.set_all() # sets transfrom, projection, dR (angle)
+        optimizer.add_vertex(v_se3)
+
+    for i in range(int(num_pose/2), num_pose):
+        pose = g2o.Isometry3d(np.identity(3), [0, (i - int(num_pose/2)- 2) * 10, 0])
+        v_se3 = g2o.VertexSCam()
+        v_se3.set_cam(f, f, p, p, baseline)
+        v_se3.set_id(i)
+        v_se3.set_estimate(pose)
+        v_se3.set_fixed(False)
+        v_se3.set_all() # sets transfrom, projection, dR (angle)
+        optimizer.add_vertex(v_se3)
+
+    point_id = 0
+
+    for i, wpt in enumerate(wPts):
+        guessed_wPt = g2o.VertexPointXYZ()
+        guessed_wPt.set_id(num_pose + point_id)
+        guessed_wPt.set_marginalized(True)
+        guessed_wPt.set_estimate(wpt + np.random.randn(3) )
+        optimizer.add_vertex(guessed_wPt)
+
+        for j in range(num_pose):
+            z = optimizer.vertex(j).map_point(wpt)
+            if i > 1:
+                z +=  np.random.randn(3)
+            edge = g2o.EdgeXyzVsc()
+            edge.set_vertex(0, guessed_wPt)
+            edge.set_vertex(1, optimizer.vertex(j))
+            edge.set_measurement(z)
+            edge.set_information(np.identity(3))
+            optimizer.add_edge(edge)
+
+        point_id += 1
+
+    sse0 = calcSSE(optimizer, num_pose, wPts)
+    print('\nRMSE (inliers only):')
+    print('before optimization:', np.sqrt(sse0 / wPts.shape[0]))
+    showCameraPoses(optimizer, 0, num_pose)
+    showWpts(optimizer, num_pose, 3)
+
+
+    print('Performing full BA:')
+    optimizer.initialize_optimization()
+    optimizer.set_verbose(False)
+    optimizer.optimize(100)
+
+    sse1 = calcSSE(optimizer, num_pose, wPts)
+
+    print('\nRMSE (inliers only):')
+    print('after  optimization:', np.sqrt(sse1 / wPts.shape[0]))
+    showCameraPoses(optimizer, 0, num_pose)
+    showWpts(optimizer, num_pose, 3)
+
+
+if __name__ == '__main__':
+    main()
+```
+
+
+
+---
+<br><br><br><br><br>
 Linux/Mac: [![CI](https://github.com/RainerKuemmerle/g2o/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/RainerKuemmerle/g2o/actions/workflows/ci.yml)
 Windows: [![win64](https://github.com/RainerKuemmerle/g2o/actions/workflows/windows.yml/badge.svg?branch=master)](https://github.com/RainerKuemmerle/g2o/actions/workflows/windows.yml)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/280c5eed95ed4059ad5d003d59e72704)](https://app.codacy.com/gh/RainerKuemmerle/g2o/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade) [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
