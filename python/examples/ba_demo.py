@@ -30,6 +30,7 @@ args = parser.parse_args()
 
 def main():
     print("BA demo")
+    
     optimizer = g2o.SparseOptimizer()
     solver = g2o.BlockSolverSE3(g2o.LinearSolverCholmodSE3())
     solver = g2o.OptimizationAlgorithmLevenberg(solver)

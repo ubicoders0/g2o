@@ -5,7 +5,7 @@ build-backend = "scikit_build_core.build"
 [project]
 name = "g2opy"
 version = "2.1.0"
-description="g2o: A General Framework for Graph Optimization"
+description = "g2o: A General Framework for Graph Optimization"
 readme = "README.md"
 authors = [
   { name = "Rainer Kuemmerle", email = "rainer.kuemmerle@gmail.com" },
@@ -14,16 +14,16 @@ requires-python = ">=3.10"
 
 [tool.scikit-build]
 cmake.args = [
-  "-DBUILD_SHARED_LIBS:=Off",
-  "-DG2O_BUILD_PYTHON:=On",
-  "-DG2O_BUILD_APPS:=Off",
-  "-DG2O_BUILD_EXAMPLES:=Off",
-  "-DG2O_USE_OPENGL:=Off"
+  "-DBUILD_SHARED_LIBS=Off",
+  "-DG2O_BUILD_PYTHON=On",
+  "-DG2O_BUILD_APPS=Off",
+  "-DG2O_BUILD_EXAMPLES=Off",
+  "-DG2O_USE_OPENGL=Off"
 ]
 wheel.packages = ["python/g2opy"]
 messages.after-failure = "Build failed."
 build.targets = ["g2opy"]
-build.tool-args = ["-j4"]
+# NOTE: no build.tool-args here; parallelism is controlled via CMAKE_BUILD_PARALLEL_LEVEL
 
 [[tool.scikit-build.overrides]]
 if.env.G2O_CACHE_BUILD = true
@@ -32,22 +32,32 @@ build-dir = "/tmp/g2opy"
 [tool.cibuildwheel]
 build-frontend = "build[uv]"
 
+# Use all cores per platform
 [tool.cibuildwheel.linux]
 before-build = "yum install -y eigen3-devel json-devel"
+environment = "CMAKE_BUILD_PARALLEL_LEVEL=$(nproc)"
 
+[tool.cibuildwheel.macos]
+environment = "CMAKE_BUILD_PARALLEL_LEVEL=$(sysctl -n hw.logicalcpu)"
+
+[tool.cibuildwheel.windows]
+# NUMBER_OF_PROCESSORS is a built-in Windows env var
+environment = "CMAKE_BUILD_PARALLEL_LEVEL=%NUMBER_OF_PROCESSORS%"
+
+# musllinux: extra deps
 [[tool.cibuildwheel.overrides]]
 select = "*-musllinux*"
 before-all = "apk add eigen"
-# TODO install nlohmann-json
+# TODO: install nlohmann-json on musllinux when available
 
-# windows
+# Windows: vcpkg toolchain and deps
 [[tool.scikit-build.overrides]]
 if.platform-system = "^win32"
 inherit.cmake.args = "append"
 cmake.args = [
- "-DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake"
+  "-DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake"
 ]
-build.tool-args = ["-maxcpucount:4"]
+# NOTE: no build.tool-args here; MSBuild parallelism comes from CMAKE_BUILD_PARALLEL_LEVEL
 
 [[tool.cibuildwheel.overrides]]
 select = "*win*"
