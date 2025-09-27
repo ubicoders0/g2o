@@ -12,7 +12,9 @@ Latest Commit base:
 - 70f058fde4516505ecb3b392b25bd66b2f4fdf47 (Sep 21, 2025)
 
 ### How it works
-Built the .whl with damn .dll and .so files for god xxxx sake.
+Built the .whl with damn .dll and .so files for god xxxxing sake.
+
+The pip packge name is **pyg2o**. But import with ``` import g2opy as g2o```
 
 ### Supported Python Versions
 
