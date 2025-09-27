@@ -2,4 +2,4 @@
 REM Python build and packaging
 
 python -m build --wheel
-for %%f in (dist\pyg2o-*.whl) do pip install "%%f"
+for %%f in (dist\ubicoders-g2opy-*.whl) do pip install "%%f"

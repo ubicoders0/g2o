@@ -1,0 +1,413 @@
+Metadata-Version: 2.4
+Name: ubicoders-g2opy
+Version: 2.1.0
+Summary: g2o: A General Framework for Graph Optimization (Python bindings)
+Author: Maintainers
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Dynamic: license-file
+
+# g2o - General Graph Optimization
+
+## Ubicoders g2opy edition
+
+![Static Badge](https://img.shields.io/badge/windows-11-brightgreen)
+![Static Badge](https://img.shields.io/badge/ubuntu-22|24|25-brightgreen)
+![Static Badge](https://img.shields.io/badge/python-3.12-007fff)
+![Static Badge](https://img.shields.io/badge/numpy-2-007fff)
+
+
+This project is based on the original g2o maintainer as below.
+
+This porject provide windows and linux off the shelf packge including .dll and .so files as well as the types of the apis for intellisense.
+
+Otherthan that, same as g2o's pymem branch
+
+Latest Commit base:
+- 70f058fde4516505ecb3b392b25bd66b2f4fdf47 (Sep 21, 2025)
+
+### How it works
+Built the .whl with damn .dll and .so files for god xxxxing sake.
+
+The pip packge name is **pyg2o**. But import with ``` import g2opy as g2o```
+
+### Intellisense Enhanced
+
+
+![sample1](https://raw.githubusercontent.com/ubicoders/g2opy/main/pics/intel0.png)
+
+
+![sample2](https://raw.githubusercontent.com/ubicoders/g2opy/main/pics/intel1.png)
+
+
+### Supported Python Versions
+
+- 3.10 ⬜ 
+- 3.11 ⬜
+- 3.12 ✅
+
+### Supproted Numpy Version
+
+- numpy 1 ⬜ 
+- numpy 2 ✅
+
+### Tested OS and Python
+
+- Windows 11 ✅
+- Ubuntu 20  ⬜
+- Ubuntu 22  ⬜
+- Ubuntu 24  ✅
+- Ubuntu 25  ✅
+
+### ubuntu dependencies
+```bash
+sudo apt-get install -qq qtdeclarative5-dev qt5-qmake libqglviewer-dev-qt5 libsuitesparse-dev libeigen3-dev -y
+pip install "numpy>=2.0"
+```
+
+For the new conda env
+```bash
+conda install -y -c conda-forge "libstdcxx-ng>=12" "libgcc-ng>=12" libgomp
+```
+
+### Test the installaton
+
+```python
+import numpy as np
+import g2opy as g2o
+np.set_printoptions(precision=3)
+np.set_printoptions(suppress=True)
+from collections import defaultdict
+
+def showCameraPoses(optim, idx, N):
+    for i in range(idx, idx + N):
+        T = optim.vertex(i).estimate().matrix()
+        trans = T[:3, 3]
+        print('camera pose at ', i, ': ', trans)
+
+def calcSSE(optim, idx, wPts):
+    sse = 0
+    N = wPts.shape[0]
+    for i in range(idx, idx + N):
+        guessedWpt = optim.vertex(i)
+        error = guessedWpt.estimate() - wPts[i-idx]
+        sse += np.sum(error ** 2)
+    return sse
+
+def showWpts(optim, idx, N):
+    for i in range(idx, idx + N):
+        T = optim.vertex(i).estimate()
+        #T = np.round(T, 0)
+        print('guessed wPt at ', i-idx, ': ', T)
+
+def main():   
+    optimizer = g2o.SparseOptimizer()
+    solver = g2o.BlockSolverSE3(g2o.LinearSolverCSparseSE3())
+    solver = g2o.OptimizationAlgorithmLevenberg(solver)
+    optimizer.set_algorithm(solver)
+
+    f, p = 200, 256
+    baseline = 0.3
+    K = np.array([[f, 0, p],
+                  [0, f, p],
+                  [0, 0, 1]])
+
+    wPts = np.array([
+        [0, 0, 10],
+        [-1, 3, 30],
+        [2, 2, 37.2],
+    ])
+
+    num_pose = 10
+    for i in range(0, int(num_pose/2)):
+        pose = g2o.Isometry3d(np.identity(3), [(i-2)*10, 0, 0])
+        v_se3 = g2o.VertexSCam()
+        v_se3.set_cam(f, f, p, p, baseline)
+        v_se3.set_id(i)
+        v_se3.set_estimate(pose)
+        if i < 2:
+            v_se3.set_fixed(True)
+        v_se3.set_all() # sets transfrom, projection, dR (angle)
+        optimizer.add_vertex(v_se3)
+
+    for i in range(int(num_pose/2), num_pose):
+        pose = g2o.Isometry3d(np.identity(3), [0, (i - int(num_pose/2)- 2) * 10, 0])
+        v_se3 = g2o.VertexSCam()
+        v_se3.set_cam(f, f, p, p, baseline)
+        v_se3.set_id(i)
+        v_se3.set_estimate(pose)
+        v_se3.set_fixed(False)
+        v_se3.set_all() # sets transfrom, projection, dR (angle)
+        optimizer.add_vertex(v_se3)
+
+    point_id = 0
+
+    for i, wpt in enumerate(wPts):
+        guessed_wPt = g2o.VertexPointXYZ()
+        guessed_wPt.set_id(num_pose + point_id)
+        guessed_wPt.set_marginalized(True)
+        guessed_wPt.set_estimate(wpt + np.random.randn(3) )
+        optimizer.add_vertex(guessed_wPt)
+
+        for j in range(num_pose):
+            z = optimizer.vertex(j).map_point(wpt)
+            if i > 1:
+                z +=  np.random.randn(3)
+            edge = g2o.EdgeXyzVsc()
+            edge.set_vertex(0, guessed_wPt)
+            edge.set_vertex(1, optimizer.vertex(j))
+            edge.set_measurement(z)
+            edge.set_information(np.identity(3))
+            optimizer.add_edge(edge)
+
+        point_id += 1
+
+    sse0 = calcSSE(optimizer, num_pose, wPts)
+    print('\nRMSE (inliers only):')
+    print('before optimization:', np.sqrt(sse0 / wPts.shape[0]))
+    showCameraPoses(optimizer, 0, num_pose)
+    showWpts(optimizer, num_pose, 3)
+
+
+    print('Performing full BA:')
+    optimizer.initialize_optimization()
+    optimizer.set_verbose(False)
+    optimizer.optimize(100)
+
+    sse1 = calcSSE(optimizer, num_pose, wPts)
+
+    print('\nRMSE (inliers only):')
+    print('after  optimization:', np.sqrt(sse1 / wPts.shape[0]))
+    showCameraPoses(optimizer, 0, num_pose)
+    showWpts(optimizer, num_pose, 3)
+
+
+if __name__ == '__main__':
+    main()
+```
+
+
+
+---
+<br><br><br><br><br>
+Linux/Mac: [![CI](https://github.com/RainerKuemmerle/g2o/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/RainerKuemmerle/g2o/actions/workflows/ci.yml)
+Windows: [![win64](https://github.com/RainerKuemmerle/g2o/actions/workflows/windows.yml/badge.svg?branch=master)](https://github.com/RainerKuemmerle/g2o/actions/workflows/windows.yml)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/280c5eed95ed4059ad5d003d59e72704)](https://app.codacy.com/gh/RainerKuemmerle/g2o/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade) [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" width="250" srcset="doc/pics/g2o-logo-dark.svg">
+    <source media="(prefers-color-scheme: light)" width="250" srcset="doc/pics/g2o-logo.svg">
+    <img alt="g2o logo" width="250" src="doc/pics/g2o-logo.svg">
+  </picture>
+</p>
+
+g2o is an open-source C++ framework for optimizing graph-based nonlinear error
+functions. g2o has been designed to be easily extensible to a wide range of
+problems and a new problem typically can be specified in a few lines of code.
+The current implementation provides solutions to several variants of SLAM and
+BA.
+
+A wide range of problems in robotics as well as in computer-vision involve the
+minimization of a non-linear error function that can be represented as a graph.
+Typical instances are simultaneous localization and mapping (SLAM) or bundle
+adjustment (BA). The overall goal in these problems is to find the
+configuration of parameters or state variables that maximally explain a set of
+measurements affected by Gaussian noise. g2o is an open-source C++ framework
+for such nonlinear least squares problems. g2o has been designed to be easily
+extensible to a wide range of problems and a new problem typically can be
+specified in a few lines of code. The current implementation provides solutions
+to several variants of SLAM and BA. g2o offers a performance comparable to
+implementations of state-of-the-art approaches for the specific problems
+(02/2011).
+
+## Python and updated memory management
+
+The branch [pymem](https://github.com/RainerKuemmerle/g2o/tree/pymem) contains a python wrapper and switches to smart pointer instead of RAW pointers.
+It is currently experimental but PRs and improvements are welcome - as always.
+
+See [g2o-python](https://github.com/miquelmassot/g2o-python) for the pypi release of g2o's python bindings.
+See below for how to install the python bindings from this repository directly.
+
+## Papers Describing the Approach
+
+Rainer Kuemmerle, Giorgio Grisetti, Hauke Strasdat,
+Kurt Konolige, and Wolfram Burgard
+[g2o: A General Framework for Graph Optimization](http://ais.informatik.uni-freiburg.de/publications/papers/kuemmerle11icra.pdf)
+IEEE International Conference on Robotics and Automation (ICRA), 2011
+
+## Documentation
+
+A detailed description of how the library is structured and how to use and extend it can be found in /doc/g2o.pdf
+The API documentation can be generated as described in doc/doxygen/readme.txt
+
+## License
+
+g2o is licensed under the BSD License. However, some libraries are available
+under different license terms. See below.
+
+The following parts are licensed under LGPL v2.1+:
+
+-   csparse_extension
+
+The following parts are licensed under GPL3+:
+
+-   g2o_viewer
+-   g2o_incremental
+-   slam2d_g2o (example for 2D SLAM with a QGLviewer GUI)
+
+Please note that some features of CHOLMOD (which may be used by g2o, see
+libsuitesparse below) are licensed under the GPL. To avoid the GPL, you may
+have to re-compile CHOLMOD without including its GPL features. The CHOLMOD
+library distributed with, for example, Ubuntu or Debian includes the GPL
+features. For example, the supernodal factorization that is licensed under GPL
+is considered by g2o if it is available.
+
+Within sub-folders we include software not written by us to guarantee easy compilation and integration into g2o itself.
+
+-   ceres: BSD (see g2o/autodiff/LICENSE)
+    Extracted headers to perform Automatic Differentiation.
+
+-   freeglut: X-Consortium (see g2o/EXTERNAL/freeglut/COPYING)
+    Copyright (c) 1999-2000 Pawel W. Olszta
+    We use a stripped down version for drawing text in OpenGL.
+
+See the doc folder for the full text of the licenses.
+
+g2o is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+licenses for more details.
+
+## Requirements
+
+-   C++17 compiler (CI pipeline runs with gcc, clang and MSVC)
+-   cmake <http://www.cmake.org>
+-   Eigen3 <http://eigen.tuxfamily.org>
+
+On Ubuntu / Debian these dependencies are resolved by installing the
+following packages.
+
+-   cmake
+-   libeigen3-dev
+
+### Optional requirements
+
+-   spdlog <https://github.com/gabime/spdlog>
+-   suitesparse <http://faculty.cse.tamu.edu/davis/suitesparse.html>
+-   Qt5 <http://qt-project.org>
+-   libQGLViewer <http://www.libqglviewer.com>
+-   JSON for Modern C++ <https://github.com/nlohmann/json>
+
+On Ubuntu / Debian these dependencies are resolved by installing the
+following packages.
+
+-   libspdlog-dev
+-   libsuitesparse-dev
+-   libcereal-dev
+-   qtdeclarative5-dev
+-   qt5-qmake
+-   libqglviewer-dev-qt5
+
+You can install those packages with the following command
+```
+sudo apt install libeigen3-dev libspdlog-dev libsuitesparse-dev qtdeclarative5-dev qt5-qmake libqglviewer-dev-qt5
+```
+
+## Mac OS X
+
+If using [Homebrew](http://brew.sh/), then
+
+`brew install g2o`
+
+will install g2o together with its required dependencies. In this case no manual compilation is necessary.
+
+## Windows
+
+If using [vcpkg](https://github.com/Microsoft/vcpkg), then
+
+`script\install-deps-windows.bat`
+
+or for full dependencies installation
+
+`script\install-additional-deps-windows.bat`
+
+will build and install the dependencies. The location of `vcpkg` and required
+triplet can be passed as cli arguments respectively. Note that usually vcpkg
+will auto detect the triplet. Set it only if your are not using the default
+build for your OS.
+
+## Compilation
+
+Our primary development platform is Linux. Experimental support for
+Mac OS X, Android and Windows (MinGW or MSVC).
+We recommend a so-called out of source build which can be achieved
+by the following command sequence.
+
+```
+mkdir build
+cd build
+cmake ../
+make
+```
+
+The binaries will be placed in bin and the libraries in lib which
+are both located underneath cmake's build folder.
+
+On Windows with `vcpkg` the following commands will generate build scripts (please change the Visual Studio version number in accordance with your system):
+
+```
+mkdir build
+cd build
+cmake -DG2O_BUILD_APPS=ON -DG2O_BUILD_EXAMPLES=ON-DVCPKG_TARGET_TRIPLET="%VCPKG_DEFAULT_TRIPLET%" -DCMAKE_TOOLCHAIN_FILE="%VCPKG_ROOT_DIR%\scripts\buildsystems\vcpkg.cmake" ..`
+cmake --build . --target ALL_BUILD
+```
+
+If you are compiling on Windows and you are for some reasons **not** using `vcpkg` please download Eigen3 and extract it.
+Within cmake-gui set the variable EIGEN3_INCLUDE_DIR to that directory.
+
+```
+mkdir build
+cd build
+cmake .. -DG2O_BUILD_APPS=ON -DG2O_BUILD_EXAMPLES=ON -DEIGEN3_INCLUDE_DIR="<THE_PATH_WHERE_YOU_PLACED_EIGEN3_AND_THE_EIGEN3_CMakeLists.txt>"
+```
+
+## Cross-Compiling for Android
+
+```
+mkdir build`
+cd build`
+cmake -DCMAKE_TOOLCHAIN_FILE=../script/android.toolchain.cmake -DANDROID_NDK=<YOUR_PATH_TO_ANDROID_NDK_r10d+> -DCMAKE_BUILD_TYPE=Release -DANDROID_ABI="armeabi-v7a with NEON" -DEIGEN3_INCLUDE_DIR="<YOUR_PATH_TO_EIGEN>" -DEIGEN3_VERSION_OK=ON ..
+cmake --build .
+```
+
+## Installing the python wrapper
+
+If you want to install `g2opy`, i.e., the python bindings for g2o, you can use `pip` preferably in a virtual env.
+
+#### Preparing the virtual env
+```
+python3 -m venv ~/.venvs/g2opy
+source ~/.venvs/g2opy/bin/activate
+```
+
+#### Installing via pip
+```
+pip install -v .
+```
+
+Afterwards you should be able to run the examples. For example, by running `python3 python/examples/ba_demo.py`.
+
+## Acknowledgments
+
+We thank the following contributors for providing patches:
+
+-   Simon J. Julier: patches to achieve compatibility with Mac OS X and others.
+-   Michael A. Eriksen for submitting patches to compile with MSVC.
+-   Mark Pupilli for submitting patches to compile with MSVC.
+
+## Projects using g2o
+
+-   [g2o-python](https://github.com/miquelmassot/g2o-python): Python binding which is also installable via `pip`
+-   [.Net wrapper](https://github.com/fugro/g2o)

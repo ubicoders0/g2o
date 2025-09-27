@@ -3,7 +3,7 @@ set VCPKG_ROOT=E:\local_projects\vcpkg
 set TRIPLET=%VCPKG_DEFAULT_TRIPLET%
 if "%TRIPLET%"=="" set TRIPLET=x64-windows
 
-set BUILD_DIR=build\cpp
+set BUILD_DIR=build\win\cpp
 set TOOLCHAIN=%VCPKG_ROOT%\scripts\buildsystems\vcpkg.cmake
 
 rem Optional but recommended for VS generators: match arch to triplet
