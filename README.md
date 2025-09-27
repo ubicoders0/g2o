@@ -10,7 +10,7 @@
 
 This project is based on the original g2o maintainer as below.
 
-This porject provide windows and linux off the shelf packge including .dll and .so files as well as the types of the apis for intellisense.
+This porject provide windows and linux off the shelf packge including the .dll and .so files as well as the types of the apis for intellisense.
 
 Otherthan that, same as g2o's pymem branch
 
