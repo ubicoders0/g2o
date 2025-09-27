@@ -25,7 +25,7 @@ def showWpts(optim, idx, N):
         #T = np.round(T, 0)
         print('guessed wPt at ', i-idx, ': ', T)
 
-def main():
+def main():   
     optimizer = g2o.SparseOptimizer()
     solver = g2o.BlockSolverSE3(g2o.LinearSolverCSparseSE3())
     solver = g2o.OptimizationAlgorithmLevenberg(solver)
