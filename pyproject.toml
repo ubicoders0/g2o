@@ -21,6 +21,7 @@ cmake.args = [
   "-DG2O_USE_OPENGL=Off"
 ]
 wheel.packages = ["python/g2opy"]
+sdist.include = ["python/g2opy/**/*.pyi"]   # <-- ensure .pyi in sdist too
 messages.after-failure = "Build failed."
 build.targets = ["g2opy"]
 # NOTE: no build.tool-args here; parallelism is controlled via CMAKE_BUILD_PARALLEL_LEVEL

@@ -725,17 +725,11 @@ class HyperGraph:
         def vertices(self) -> list[HyperGraph.Vertex]:
             ...
     class HyperGraphDefaultIds(enum.Enum):
-        """
-        An enumeration.
-        """
         InvalidId: typing.ClassVar[HyperGraph.HyperGraphDefaultIds]  # value = <HyperGraphDefaultIds.InvalidId: -2>
         UnassignedId: typing.ClassVar[HyperGraph.HyperGraphDefaultIds]  # value = <HyperGraphDefaultIds.UnassignedId: -1>
     class HyperGraphElement:
         pass
     class HyperGraphElementType(enum.Enum):
-        """
-        An enumeration.
-        """
         HGET_CACHE: typing.ClassVar[HyperGraph.HyperGraphElementType]  # value = <HyperGraphElementType.HGET_CACHE: 3>
         HGET_DATA: typing.ClassVar[HyperGraph.HyperGraphElementType]  # value = <HyperGraphElementType.HGET_DATA: 4>
         HGET_EDGE: typing.ClassVar[HyperGraph.HyperGraphElementType]  # value = <HyperGraphElementType.HGET_EDGE: 1>
@@ -798,9 +792,6 @@ class IoFileFilter:
     def __init__(self, filter: str, format: IoFormat) -> None:
         ...
 class IoFormat(enum.Enum):
-    """
-    An enumeration.
-    """
     BINARY: typing.ClassVar[IoFormat]  # value = <IoFormat.BINARY: 1>
     G2O: typing.ClassVar[IoFormat]  # value = <IoFormat.G2O: 0>
     JSON: typing.ClassVar[IoFormat]  # value = <IoFormat.JSON: 2>
@@ -1147,9 +1138,6 @@ class OdomConvert:
         ...
 class OptimizableGraph(HyperGraph):
     class ActionType(enum.Enum):
-        """
-        An enumeration.
-        """
         AT_NUM_ELEMENTS: typing.ClassVar[OptimizableGraph.ActionType]  # value = <ActionType.AT_NUM_ELEMENTS: 2>
         AT_POSTITERATION: typing.ClassVar[OptimizableGraph.ActionType]  # value = <ActionType.AT_POSTITERATION: 1>
         AT_PREITERATION: typing.ClassVar[OptimizableGraph.ActionType]  # value = <ActionType.AT_PREITERATION: 0>
@@ -2143,9 +2131,6 @@ class StereoCameraParameters:
     def principle_point(self, arg0: typing.Annotated[numpy.typing.ArrayLike, numpy.float64, "[2, 1]"]) -> None:
         ...
 class TransformTraits(enum.Enum):
-    """
-    An enumeration.
-    """
     Affine: typing.ClassVar[TransformTraits]  # value = <TransformTraits.Affine: 2>
     AffineCompact: typing.ClassVar[TransformTraits]  # value = <TransformTraits.AffineCompact: 18>
     Isometry: typing.ClassVar[TransformTraits]  # value = <TransformTraits.Isometry: 1>
