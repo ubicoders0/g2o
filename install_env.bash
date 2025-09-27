@@ -3,7 +3,7 @@
 sudo apt-get update -qq
 # dependencies for building g2o
 sudo apt-get install -qq qtdeclarative5-dev qt5-qmake libqglviewer-dev-qt5 libsuitesparse-dev libeigen3-dev -y
-pip install pybind11-stubgen
+pip install pybind11-stubgen build twine setuptools wheel
 pip install "numpy>=2.0"
 
 

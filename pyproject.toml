@@ -29,4 +29,3 @@ g2opy = [
 # If you need to include non-code files too:
 # [tool.setuptools.include-package-data]
 # value = true
-
