@@ -2,6 +2,12 @@
 
 ## Ubicoders g2opy edition
 
+![Static Badge](https://img.shields.io/badge/windows-11-brightgreen)
+![Static Badge](https://img.shields.io/badge/ubuntu-22|24|25-brightgreen)
+![Static Badge](https://img.shields.io/badge/python-3.12-007fff)
+![Static Badge](https://img.shields.io/badge/numpy-2-007fff)
+
+
 This project is based on the original g2o maintainer as below.
 
 This porject provide windows and linux off the shelf packge including .dll and .so files as well as the types of the apis for intellisense.
@@ -15,6 +21,15 @@ Latest Commit base:
 Built the .whl with damn .dll and .so files for god xxxxing sake.
 
 The pip packge name is **pyg2o**. But import with ``` import g2opy as g2o```
+
+### Intellisense Enhanced
+
+
+![sample1](https://raw.githubusercontent.com/ubicoders/g2opy/main/pics/intel0.png)
+
+
+![sample2](https://raw.githubusercontent.com/ubicoders/g2opy/main/pics/intel1.png)
+
 
 ### Supported Python Versions
 
