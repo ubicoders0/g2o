@@ -2,6 +2,11 @@ LICENSE
 README.md
 pyproject.toml
 setup.py
+python/g2opy/__init__.py
+python/g2opy/__init__.pyi
+python/g2opy/g2opy.cpython-312-x86_64-linux-gnu.so
+python/g2opy/g2opy/__init__.pyi
+python/g2opy/g2opy/private.pyi
 python/pyg2o.egg-info/PKG-INFO
 python/pyg2o.egg-info/SOURCES.txt
 python/pyg2o.egg-info/dependency_links.txt

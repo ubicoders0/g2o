@@ -3,12 +3,13 @@ requires = ["setuptools>=69", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "g2opy"
+name = "pyg2o"
 version = "2.1.0"
 description = "g2o: A General Framework for Graph Optimization (Python bindings)"
 readme = "README.md"
 authors = [{ name = "Maintainers" }]
 requires-python = ">=3.10"
+
 # If you publish, add classifiers, license, urls, etc.
 
 [tool.setuptools]

@@ -1,5 +1,26 @@
 # g2o - General Graph Optimization
 
+This project is based on the original g2o maintainer as below.
+
+
+This porject provide windows and linux off the shelf packge including .dll and .so files as well as the types of the apis for intellisense.
+
+
+# ubuntu dependency
+
+```bash
+sudo apt-get install -qq qtdeclarative5-dev qt5-qmake libqglviewer-dev-qt5 libsuitesparse-dev libeigen3-dev -y
+pip install "numpy>=2.0"
+```
+for new conda environment
+```
+conda install -y -c conda-forge "libstdcxx-ng>=12" "libgcc-ng>=12" libgomp
+```
+
+
+
+
+
 Linux/Mac: [![CI](https://github.com/RainerKuemmerle/g2o/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/RainerKuemmerle/g2o/actions/workflows/ci.yml)
 Windows: [![win64](https://github.com/RainerKuemmerle/g2o/actions/workflows/windows.yml/badge.svg?branch=master)](https://github.com/RainerKuemmerle/g2o/actions/workflows/windows.yml)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/280c5eed95ed4059ad5d003d59e72704)](https://app.codacy.com/gh/RainerKuemmerle/g2o/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade) [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)

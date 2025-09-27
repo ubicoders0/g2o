@@ -14,12 +14,12 @@ if [[ ! -d "stubs" || "$1" == "gen-stub" ]]; then
 
     # Rebuild after stubs are copied
     python -m build --wheel
-    pip install --force-reinstall dist/g2opy-*.whl
+    pip install --force-reinstall dist/pyg2o-*.whl
     pip install dist/*.whl
 fi
 
 # Fix wheel for PyPI
 pip install auditwheel
-auditwheel repair dist/g2opy-*-linux_x86_64.whl -w dist/
-rm dist/g2opy-*-linux_x86_64.whl
-pip install --force-reinstall dist/g2opy*.whl
+auditwheel repair dist/pyg2o-*-linux_x86_64.whl -w dist/
+rm dist/pyg2o-*-linux_x86_64.whl
+pip install --force-reinstall dist/pyg2o*.whl
