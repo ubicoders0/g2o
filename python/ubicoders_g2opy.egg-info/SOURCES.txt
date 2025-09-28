@@ -30,4 +30,5 @@ python/g2opy/g2opy/private.pyi
 python/ubicoders_g2opy.egg-info/PKG-INFO
 python/ubicoders_g2opy.egg-info/SOURCES.txt
 python/ubicoders_g2opy.egg-info/dependency_links.txt
+python/ubicoders_g2opy.egg-info/requires.txt
 python/ubicoders_g2opy.egg-info/top_level.txt

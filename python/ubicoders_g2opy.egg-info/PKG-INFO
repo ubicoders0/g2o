@@ -1,11 +1,12 @@
 Metadata-Version: 2.4
 Name: ubicoders-g2opy
-Version: 2.1.3
+Version: 2.1.4
 Summary: g2o: A General Framework for Graph Optimization (Python bindings)
 Author: Maintainers
 Requires-Python: >=3.10
 Description-Content-Type: text/markdown
 License-File: LICENSE
+Requires-Dist: numpy>=2
 Dynamic: license-file
 
 # g2o - General Graph Optimization

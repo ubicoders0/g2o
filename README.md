@@ -8,6 +8,31 @@
 ![Static Badge](https://img.shields.io/badge/numpy-2-007fff)
 
 
+## ubuntu install
+```bash
+sudo apt-get install -qq qtdeclarative5-dev qt5-qmake libqglviewer-dev-qt5 libsuitesparse-dev libeigen3-dev -y
+```
+
+For the new conda env
+```bash
+conda install -y -c conda-forge "libstdcxx-ng>=12" "libgcc-ng>=12" libgomp
+```
+
+Then, install this package
+```
+pip install ubicoders-g2opy
+```
+
+## windows dependencies
+
+just do 
+
+```
+pip install ubicoders-g2opy
+```
+
+## intro
+
 This project is based on the original g2o maintainer as below.
 
 This porject provide windows and linux off the shelf packge including the .dll and .so files as well as the types of the apis for intellisense.
@@ -17,33 +42,29 @@ Otherthan that, same as g2o's pymem branch
 Latest Commit base:
 - 70f058fde4516505ecb3b392b25bd66b2f4fdf47 (Sep 21, 2025)
 
-### How it works
+## How it works
 Built the .whl with the damn .dll and .so files for god xxxxing sake.
 
 The pip packge name is **pyg2o**. But import with ``` import g2opy as g2o```
 
-### Intellisense Enhanced
-
-
+## Intellisense Enhanced
 ![sample1](https://raw.githubusercontent.com/ubicoders/g2opy/main/pics/intel0.png)
-
-
 ![sample2](https://raw.githubusercontent.com/ubicoders/g2opy/main/pics/intel1.png)
 
 
-### Supported Python Versions
+## Supported Python Versions
 
 - 3.10 ✅
 - 3.11 ✅
 - 3.12 ✅
 - 3.13 ✅
 
-### Supproted Numpy Version
+## Supproted Numpy Version
 
 - numpy 1 ⬜
 - numpy 2 ✅
 
-### Tested OS and Python
+## Tested OS and Python
 
 - Windows 11 ✅
 - Ubuntu 20  ⬜
@@ -51,18 +72,16 @@ The pip packge name is **pyg2o**. But import with ``` import g2opy as g2o```
 - Ubuntu 24  ✅
 - Ubuntu 25  ✅
 
-### ubuntu dependencies
-```bash
-sudo apt-get install -qq qtdeclarative5-dev qt5-qmake libqglviewer-dev-qt5 libsuitesparse-dev libeigen3-dev -y
-pip install "numpy>=2.0"
+
+## Test the installaton
+
+create below and run
+
+```
+python tester.py
 ```
 
-For the new conda env
-```bash
-conda install -y -c conda-forge "libstdcxx-ng>=12" "libgcc-ng>=12" libgomp
-```
-
-### Test the installaton
+### tester.py
 
 ```python
 import numpy as np
