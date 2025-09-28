@@ -33,13 +33,14 @@ The pip packge name is **pyg2o**. But import with ``` import g2opy as g2o```
 
 ### Supported Python Versions
 
-- 3.10 ⬜ 
-- 3.11 ⬜
+- 3.10 ✅
+- 3.11 ✅
 - 3.12 ✅
+- 3.13 ✅
 
 ### Supproted Numpy Version
 
-- numpy 1 ⬜ 
+- numpy 1 ⬜
 - numpy 2 ✅
 
 ### Tested OS and Python

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: ubicoders-g2opy
-Version: 2.1.1
+Version: 2.1.2
 Summary: g2o: A General Framework for Graph Optimization (Python bindings)
 Author: Maintainers
 Requires-Python: >=3.10
@@ -20,7 +20,7 @@ Dynamic: license-file
 
 This project is based on the original g2o maintainer as below.
 
-This porject provide windows and linux off the shelf packge including .dll and .so files as well as the types of the apis for intellisense.
+This porject provide windows and linux off the shelf packge including the .dll and .so files as well as the types of the apis for intellisense.
 
 Otherthan that, same as g2o's pymem branch
 
@@ -43,13 +43,14 @@ The pip packge name is **pyg2o**. But import with ``` import g2opy as g2o```
 
 ### Supported Python Versions
 
-- 3.10 ⬜ 
-- 3.11 ⬜
+- 3.10 ✅
+- 3.11 ✅
 - 3.12 ✅
+- 3.13 ✅
 
 ### Supproted Numpy Version
 
-- numpy 1 ⬜ 
+- numpy 1 ⬜
 - numpy 2 ✅
 
 ### Tested OS and Python

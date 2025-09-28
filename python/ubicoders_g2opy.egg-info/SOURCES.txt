@@ -12,6 +12,7 @@ python/g2opy/colamd.dll
 python/g2opy/cxsparse.dll
 python/g2opy/g2opy.cp312-win_amd64.pyd
 python/g2opy/g2opy.cpython-312-x86_64-linux-gnu.so
+python/g2opy/g2opy.cpython-313-x86_64-linux-gnu.so
 python/g2opy/libgcc_s_seh-1.dll
 python/g2opy/libgfortran-5.dll
 python/g2opy/liblapack.dll
