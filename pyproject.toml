@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ubicoders-g2opy"
-version = "2.1.4"
+version = "2.1.5"
 description = "g2o: A General Framework for Graph Optimization (Python bindings)"
 readme = "README.md"
 authors = [{ name = "Maintainers" }]
@@ -12,7 +12,12 @@ requires-python = ">=3.10"
 dependencies = [
   "numpy>=2"
 ]
-# If you publish, add classifiers, license, urls, etc.
+
+[project.urls]
+Homepage = "https://github.com/ubicoders0/g2o"
+Repository = "https://github.com/ubicoders0/g2o"
+
+
 
 [tool.setuptools]
 # Our Python package lives under ./python
