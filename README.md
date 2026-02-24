@@ -71,8 +71,8 @@ The pip packge name is **pyg2o**. But import with ``` import g2opy as g2o```
 ## Tested OS and Python
 
 - Windows 11 ✅
-- Ubuntu 20  ⬜
-- Ubuntu 22  ⬜
+- Ubuntu 20  ✅
+- Ubuntu 22  ✅
 - Ubuntu 24  ✅
 - Ubuntu 25  ✅
 
