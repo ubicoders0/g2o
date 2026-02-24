@@ -8,6 +8,10 @@
 ![Static Badge](https://img.shields.io/badge/numpy-2-007fff)
 
 
+## Build and Publishing
+
+For build instructions and maintainer guidelines, please refer to [manual.md](manual.md).
+
 ## ubuntu install
 ```bash
 sudo apt-get install -qq qtdeclarative5-dev qt5-qmake libqglviewer-dev-qt5 libsuitesparse-dev libeigen3-dev -y

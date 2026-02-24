@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ubicoders-g2opy"
-version = "2.1.5"
+version = "2.1.9"
 description = "g2o: A General Framework for Graph Optimization (Python bindings)"
 readme = "README.md"
 authors = [{ name = "Maintainers" }]

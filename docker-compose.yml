@@ -1,0 +1,173 @@
+version: "3.8"
+
+services:
+  # Ubuntu 20.04 matrix
+  build-u20-p310:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        UBUNTU_VERSION: "20.04"
+    volumes:
+      - .:/app
+    environment:
+      - TERM=xterm
+      - PY_VER=3.10
+    command: >
+      bash -c "/bin/bash /app/docker_runner.bash > /app/dist_logs/u20_p310.log 2>&1"
+
+  build-u20-p311:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        UBUNTU_VERSION: "20.04"
+    volumes:
+      - .:/app
+    environment:
+      - TERM=xterm
+      - PY_VER=3.11
+    command: >
+      bash -c "/bin/bash /app/docker_runner.bash > /app/dist_logs/u20_p311.log 2>&1"
+
+  build-u20-p312:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        UBUNTU_VERSION: "20.04"
+    volumes:
+      - .:/app
+    environment:
+      - TERM=xterm
+      - PY_VER=3.12
+    command: >
+      bash -c "/bin/bash /app/docker_runner.bash > /app/dist_logs/u20_p312.log 2>&1"
+
+  build-u20-p313:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        UBUNTU_VERSION: "20.04"
+    volumes:
+      - .:/app
+    environment:
+      - TERM=xterm
+      - PY_VER=3.13
+    command: >
+      bash -c "/bin/bash /app/docker_runner.bash > /app/dist_logs/u20_p313.log 2>&1"
+
+  # Ubuntu 22.04 matrix
+  build-u22-p310:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        UBUNTU_VERSION: "22.04"
+    volumes:
+      - .:/app
+    environment:
+      - TERM=xterm
+      - PY_VER=3.10
+    command: >
+      bash -c "/bin/bash /app/docker_runner.bash > /app/dist_logs/u22_p310.log 2>&1"
+
+  build-u22-p311:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        UBUNTU_VERSION: "22.04"
+    volumes:
+      - .:/app
+    environment:
+      - TERM=xterm
+      - PY_VER=3.11
+    command: >
+      bash -c "/bin/bash /app/docker_runner.bash > /app/dist_logs/u22_p311.log 2>&1"
+
+  build-u22-p312:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        UBUNTU_VERSION: "22.04"
+    volumes:
+      - .:/app
+    environment:
+      - TERM=xterm
+      - PY_VER=3.12
+    command: >
+      bash -c "/bin/bash /app/docker_runner.bash > /app/dist_logs/u22_p312.log 2>&1"
+
+  build-u22-p313:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        UBUNTU_VERSION: "22.04"
+    volumes:
+      - .:/app
+    environment:
+      - TERM=xterm
+      - PY_VER=3.13
+    command: >
+      bash -c "/bin/bash /app/docker_runner.bash > /app/dist_logs/u22_p313.log 2>&1"
+
+  # Ubuntu 24.04 matrix
+  build-u24-p310:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        UBUNTU_VERSION: "24.04"
+    volumes:
+      - .:/app
+    environment:
+      - TERM=xterm
+      - PY_VER=3.10
+    command: >
+      bash -c "/bin/bash /app/docker_runner.bash > /app/dist_logs/u24_p310.log 2>&1"
+
+  build-u24-p311:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        UBUNTU_VERSION: "24.04"
+    volumes:
+      - .:/app
+    environment:
+      - TERM=xterm
+      - PY_VER=3.11
+    command: >
+      bash -c "/bin/bash /app/docker_runner.bash > /app/dist_logs/u24_p311.log 2>&1"
+
+  build-u24-p312:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        UBUNTU_VERSION: "24.04"
+    volumes:
+      - .:/app
+    environment:
+      - TERM=xterm
+      - PY_VER=3.12
+    command: >
+      bash -c "/bin/bash /app/docker_runner.bash > /app/dist_logs/u24_p312.log 2>&1"
+
+  build-u24-p313:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        UBUNTU_VERSION: "24.04"
+    volumes:
+      - .:/app
+    environment:
+      - TERM=xterm
+      - PY_VER=3.13
+    command: >
+      bash -c "/bin/bash /app/docker_runner.bash > /app/dist_logs/u24_p313.log 2>&1"

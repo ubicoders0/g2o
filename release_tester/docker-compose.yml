@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  test-u20:
+    build:
+      context: ..
+      dockerfile: release_tester/Dockerfile
+      args:
+        UBUNTU_VERSION: 20.04
+
+  test-u22:
+    build:
+      context: ..
+      dockerfile: release_tester/Dockerfile
+      args:
+        UBUNTU_VERSION: 22.04
+
+  test-u24:
+    build:
+      context: ..
+      dockerfile: release_tester/Dockerfile
+      args:
+        UBUNTU_VERSION: 24.04
